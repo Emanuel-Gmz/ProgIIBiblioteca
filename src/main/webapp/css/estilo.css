@@ -1,0 +1,252 @@
+/* =================================================================================== */
+/* GLOBAL: IMPORTACIONES, VARIABLES DE IDENTIDAD Y CUERPO PRINCIPAL                    */
+/* =================================================================================== */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap");
+
+:root {
+    --celeste: #74acdf;
+    --blanco: #ffffff;
+    --amarillo: #f1b32d;
+    --azul-oscuro: #1b365d;
+    --bg-principal: #edf2f7;
+    --gris-claro: #f8fafc;
+    --negro: #000000;
+}
+
+/* =================================================================================== */
+/* COMPONENTE: BODY Y LAYOUT                                                           */
+/* =================================================================================== */
+body {
+    font-family: "Montserrat", sans-serif;
+    margin: 0;
+    padding-bottom: 80px;
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-bottom: 0;
+    }
+}
+
+/* Fondo general con un tono más cálido y moderno en modo claro */
+[data-bs-theme="light"] body {
+    background-color: var(--bg-principal);
+}
+
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(27, 54, 93, 0.08);
+}
+
+[data-bs-theme="light"] .container {
+    border-top: 5px solid var(--amarillo);
+    background-color: var(--blanco);
+}
+
+/* =================================================================================== */
+/* COMPONENTE: NAVBAR Y CABECERA                                                       */
+/* =================================================================================== */
+.main-header {
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+    padding: 15px 30px;
+}
+
+.navbar-afa {
+    background-color: var(--azul-oscuro) !important;
+    min-height: 70px;
+}
+
+.logo-prode {
+    height: 45px;
+    width: auto;
+}
+
+.navbar-separador {
+    background-color: var(--gris-claro);
+}
+
+/* =================================================================================== */
+/* COMPONENTE: TARJETAS Y CATÁLOGO DE LIBROS                                           */
+/* =================================================================================== */
+.card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+[data-bs-theme="light"] .card {
+    border: 1px solid #d8e2ec;
+    background-color: var(--blanco);
+}
+
+[data-bs-theme="light"] .card:hover {
+    transform: translateY(-5px);
+    border-color: var(--celeste);
+    box-shadow: 0 12px 25px rgba(27, 54, 93, 0.12) !important;
+}
+
+[data-bs-theme="light"] .card .bg-light {
+    background-color: #f1f5f9 !important;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.styled-table th, .styled-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.styled-table th {
+    background-color: var(--azul-oscuro);
+    color: white;
+    font-weight: 600;
+}
+
+.styled-table tbody tr:hover {
+    background-color: rgba(116, 172, 223, 0.05);
+}
+
+/* =================================================================================== */
+/* COMPONENTE: BOTONES Y ACCIONES                                                      */
+/* =================================================================================== */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--celeste);
+    color: var(--azul-oscuro);
+    font-weight: bold;
+}
+.btn-primary:hover {
+    background-color: #5b92c4;
+}
+
+.btn-success {
+    background-color: #2ecc71;
+    color: white;
+}
+.btn-success:hover {
+    background-color: #27ae60;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+/* =================================================================================== */
+/* COMPONENTE: ALERTAS Y MENSAJES DE ERROR                                             */
+/* =================================================================================== */
+.alert-error {
+    background-color: #fadbd8;
+    color: #900c3f;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #f5b7b1;
+}
+
+/* =================================================================================== */
+/* ESTILOS PERSONALIZADOS PARA EL CATÁLOGO (ADAPTATIVOS CLARO / OSCURO)                */
+/* =================================================================================== */
+
+/* Modo Claro */
+[data-bs-theme="light"] .seccion-catalogo {
+    background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%) !important;
+    border-top: 5px solid var(--amarillo, #f1b32d) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(27, 54, 93, 0.1) !important;
+}
+
+[data-bs-theme="light"] .tarjeta-libro {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-top: 4px solid var(--celeste, #74acdf) !important;
+    transition: all 0.3s ease-in-out !important;
+}
+
+[data-bs-theme="light"] .tarjeta-libro:hover {
+    transform: translateY(-6px) !important;
+    border-color: var(--azul-oscuro, #1b365d) !important;
+    box-shadow: 0 14px 30px rgba(27, 54, 93, 0.15) !important;
+}
+
+[data-bs-theme="light"] .encabezado-portada {
+    background: linear-gradient(to bottom, #f1f5f9, #e2e8f0) !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+}
+
+/* Modo Oscuro */
+[data-bs-theme="dark"] .seccion-catalogo {
+    background: var(--bs-body-bg) !important;
+    border-top: 5px solid var(--amarillo, #f1b32d) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-bs-theme="dark"] .tarjeta-libro {
+    background-color: #212529 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-top: 4px solid var(--celeste, #74acdf) !important;
+    transition: all 0.3s ease-in-out !important;
+}
+
+[data-bs-theme="dark"] .tarjeta-libro:hover {
+    transform: translateY(-6px) !important;
+    border-color: var(--amarillo, #f1b32d) !important;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-bs-theme="dark"] .encabezado-portada {
+    background: #2b3035 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-bs-theme="dark"] .tarjeta-libro .text-muted {
+    color: #adb5bd !important;
+}
+
+/* Forzar textos en negrita dentro de las tarjetas del catálogo en ambos modos */
+.tarjeta-libro .card-subtitle,
+.tarjeta-libro .card-text,
+.tarjeta-libro .text-muted,
+.tarjeta-libro span {
+    font-weight: 600 !important;
+}
+
+/* =================================================================================== */
+/* FOOTER                                                                              */
+/* =================================================================================== */
+.main-footer {
+    background-color: var(--azul-oscuro);
+    color: #bdc3c7;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+    font-size: 0.9rem;
+}
