@@ -25,16 +25,15 @@ public class LibroServlet extends HttpServlet {
 
     private LibroDAO libroDAO;
     private CategoriaDAO categoriaDAO;
-    private AutorDAO autorDAO; // 👈 1. Declaramos el DAO de Autores
+    private AutorDAO autorDAO;
 
     @Override
     public void init() throws ServletException {
         this.libroDAO = new LibroDAO();
         this.categoriaDAO = new CategoriaDAO();
-        this.autorDAO = new AutorDAO(); // 👈 2. Lo inicializamos
+        this.autorDAO = new AutorDAO();
     }
 
-    // --- MANEJO DE PETICIONES GET (Listar, Buscar o Formulario de Alta) ---
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -69,7 +68,6 @@ public class LibroServlet extends HttpServlet {
         }
     }
 
-    // --- MANEJO DE PETICIONES POST (Guardar nuevo libro) ---
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -86,7 +84,6 @@ public class LibroServlet extends HttpServlet {
             }
         } catch (LibroException e) {
             request.setAttribute("error", e.getMessage());
-            // 👈 3. Recargamos tanto categorías como autores si falla el alta para redisplayar el form
             request.setAttribute("categorias", categoriaDAO.getAll());
             request.setAttribute("listaAutores", autorDAO.getAll());
             request.getRequestDispatcher("/formNuevoLibro.jsp").forward(request, response);
@@ -99,13 +96,10 @@ public class LibroServlet extends HttpServlet {
         }
     }
 
-    // --- LÓGICA DE NEGOCIO Y ACCIONES ---
-
     private void listarLibros(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<Libro> listaLibros = libroDAO.getAll();
 
-        // 1. Enviamos las categorías para que el selector del catálogo siempre las muestre
         request.setAttribute("listaCategorias", categoriaDAO.getAll());
         request.setAttribute("listaLibros", listaLibros);
         request.getRequestDispatcher("/catalogo.jsp").forward(request, response);
@@ -117,24 +111,21 @@ public class LibroServlet extends HttpServlet {
         String idCategoriaStr = request.getParameter("idCategoria");
         List<Libro> listaLibros;
 
-        // 2. Lógica para filtrar por título, por categoría, o por ambos a la vez
         boolean tieneQuery = (query != null && !query.trim().isEmpty());
         boolean tieneCategoria = (idCategoriaStr != null && !idCategoriaStr.trim().isEmpty());
 
         if (tieneQuery && tieneCategoria) {
             int idCat = Integer.parseInt(idCategoriaStr);
-            // Opcional: si tu DAO tiene un método combinado, úsalo. Si no, puedes filtrar o implementar buscarPorTituloYCategoria
             listaLibros = libroDAO.buscarPorTituloYCategoria(query, idCat);
         } else if (tieneQuery) {
             listaLibros = libroDAO.buscarPorTitulo(query);
         } else if (tieneCategoria) {
             int idCat = Integer.parseInt(idCategoriaStr);
-            listaLibros = libroDAO.buscarPorCategoria(idCat); // Asegúrate de tener este método en tu LibroDAO, o implementarlo
+            listaLibros = libroDAO.buscarPorCategoria(idCat);
         } else {
             listaLibros = libroDAO.getAll();
         }
 
-        // 3. Enviamos también las categorías para que no se deslacen al filtrar
         request.setAttribute("listaCategorias", categoriaDAO.getAll());
         request.setAttribute("listaLibros", listaLibros);
         request.setAttribute("busquedaActual", query);
@@ -143,7 +134,6 @@ public class LibroServlet extends HttpServlet {
 
     private void mostrarFormularioNuevo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // 👈 4. Mandamos las categorías y los autores para cargarlos en los select del formulario
         request.setAttribute("categorias", categoriaDAO.getAll());
         request.setAttribute("listaAutores", autorDAO.getAll());
         request.getRequestDispatcher("/formNuevoLibro.jsp").forward(request, response);
@@ -155,7 +145,7 @@ public class LibroServlet extends HttpServlet {
         String titulo = request.getParameter("titulo");
         String descripcion = request.getParameter("descripcion");
         String idCategoriaStr = request.getParameter("idCategoria");
-        String idAutorStr = request.getParameter("idAutor"); // 👈 5. Recogemos el autor enviado
+        String idAutorStr = request.getParameter("idAutor");
         String imagen = request.getParameter("imagen");
 
         if (titulo == null || titulo.trim().isEmpty()) {
@@ -172,7 +162,6 @@ public class LibroServlet extends HttpServlet {
         nuevoLibro.setDescripcion(descripcion);
         nuevoLibro.setImagen(imagen);
 
-        // Asociar la categoría si fue seleccionada
         if (idCategoriaStr != null && !idCategoriaStr.isEmpty()) {
             int idCat = Integer.parseInt(idCategoriaStr);
             Categoria cat = categoriaDAO.getById(idCat);
@@ -181,7 +170,6 @@ public class LibroServlet extends HttpServlet {
             }
         }
 
-        // 👈 6. Asociar el autor seleccionado a la lista que espera el LibroDAO
         int idAutor = Integer.parseInt(idAutorStr);
         Autor autor = autorDAO.getById(idAutor);
         if (autor != null) {
@@ -192,11 +180,9 @@ public class LibroServlet extends HttpServlet {
 
         libroDAO.insert(nuevoLibro);
 
-        // Redirigir al listado de libros con éxito
         response.sendRedirect(request.getContextPath() + "/libros?action=listar");
     }
 
-    // --- MÉTODO AUXILIAR DE SEGURIDAD ---
     private void verificarPermisosAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Usuario usuario = (session != null) ? (Usuario) session.getAttribute("usuarioLogueado") : null;

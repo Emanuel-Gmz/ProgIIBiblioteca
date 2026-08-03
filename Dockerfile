@@ -5,7 +5,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM tomcat:10.1-jdk17
-# Copia directamente el WAR que ya tienes en tu carpeta target local
 COPY target/ProBiblio.war /usr/local/tomcat/webapps/ProBiblio.war
 
 EXPOSE 8080

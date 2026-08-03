@@ -27,16 +27,13 @@
             <form action="${pageContext.request.contextPath}/prestamos" method="POST">
                 <input type="hidden" name="action" value="solicitar">
 
-                <!-- Si el usuario está logueado, enviamos su ID oculto -->
                 <input type="hidden" name="idUsuario" value="${sessionScope.usuarioLogueado.idUsuario}">
 
                 <div class="mb-3">
                     <label for="idEjemplar" class="form-label fw-bold">Seleccionar Ejemplar Físico (Disponible):</label>
-                    <!-- Quitamos bg-dark y text-white para que respete el estilo claro -->
                     <select name="idEjemplar" id="idEjemplar" class="form-select" required>
                         <option value="">-- Seleccione un ejemplar --</option>
                         <c:forEach var="ej" items="${ejemplares}">
-                            <!-- Filtramos para que solo muestre los DISPONIBLES y que coincidan con el libro elegido -->
                             <c:if test="${ej.estado == 'DISPONIBLE' and ej.libro.idLibro == idLibroSeleccionado}">
                                 <option value="${ej.idEjemplar}">
                                     ${ej.libro.titulo} - Código: [${ej.codigoInventario}]

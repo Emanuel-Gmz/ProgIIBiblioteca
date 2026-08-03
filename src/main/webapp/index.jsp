@@ -7,21 +7,17 @@
     <title>Inicio - Biblioteca Virtual WillBook</title>
     <link rel="icon" href="${pageContext.request.contextPath}/imagenes/FaviconW.png" type="image/png">
 
-    <!-- Bootstrap 5 y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css?v=2"/>
 </head>
 <body>
 
-    <!-- Incluimos el Header unificado -->
     <jsp:include page="header.jsp" />
 
     <main class="container my-5" style="max-width: 1100px;">
-        <!-- Contenedor central principal que se adapta automáticamente al tema claro u oscuro -->
         <div class="card shadow-lg border-0 p-4 p-md-5 rounded-4">
 
-            <!-- 1. HERO / BIENVENIDA -->
             <section class="p-4 p-md-5 mb-5 rounded-4 text-center border shadow-sm bg-body-tertiary">
                 <h1 class="display-5 fw-bold mb-3 text-primary">¡Bienvenido a WillBook!</h1>
                 <p class="col-md-9 fs-5 mx-auto text-secondary mb-4">
@@ -39,7 +35,6 @@
                 </div>
             </section>
 
-            <!-- 3. ÚLTIMOS LIBROS AGREGADOS / NOVEDADES -->
             <div class="mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 class="fw-bold m-0">
@@ -86,7 +81,6 @@
                 </div>
             </div>
 
-            <!-- 4. PASOS PARA TU PRÉSTAMO -->
             <div class="card shadow-sm p-4 text-center rounded-4 mb-5">
                 <h3 class="fw-bold mb-4">
                     <i class="bi bi-info-circle-fill me-2 text-primary"></i> PASOS PARA TU PRÉSTAMO
@@ -114,7 +108,6 @@
                 </div>
             </div>
 
-            <!-- 5. TOP 3 LECTORES DESTACADOS Y BUSCADOR -->
             <div class="row g-4 mb-3">
                 <div class="col-lg-6">
                     <div class="card h-100 shadow-sm border">
@@ -144,7 +137,6 @@
                     </div>
                 </div>
 
-                <!-- Accesos al Buscador -->
                 <div class="col-lg-6">
                     <div class="card h-100 shadow-sm border bg-body-secondary">
                         <div class="card-body d-flex flex-column justify-content-center text-center p-4">

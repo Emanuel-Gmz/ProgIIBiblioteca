@@ -28,17 +28,14 @@
                     </div>
 
                     <div class="card-body">
-                        <!-- Mensaje de error si el Servlet lo devuelve -->
                         <c:if test="${not empty error}">
                             <div class="alert alert-danger" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i> ${error}
                             </div>
                         </c:if>
 
-                        <!-- El action apunta correctamente a la ruta /usuario del Servlet -->
                         <form action="${pageContext.request.contextPath}/usuario" method="POST">
 
-                            <!-- Acción dinámica: Si el admin registra desde su panel, usa registrarAdmin, sino el registro común -->
                             <input type="hidden" name="action" value="${not empty sessionScope.usuarioLogueado and (sessionScope.usuarioLogueado.rol == 'ADMIN' || sessionScope.usuarioLogueado.rol == 'BIBLIOTECARIO') ? 'registrarAdmin' : 'registrar'}">
 
                             <div class="mb-3">

@@ -15,29 +15,23 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class LibroDAO implements DAO<Libro, Integer> {
 
-    // --- CONSULTAS SQL ---
     private static final String SQL_INSERT =
             "INSERT INTO libros (ISBN, titulo, descripcion, imagen, idCategoria) VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE =
             "UPDATE libros SET ISBN = ?, titulo = ?, descripcion = ?, imagen = ?, idCategoria = ? WHERE idLibro = ?";
     private static final String SQL_DELETE =
             "DELETE FROM libros WHERE idLibro = ?";
-
     public static final String SQL_GETALL =
             "SELECT l.idLibro, l.ISBN, l.titulo, l.descripcion, l.imagen, " +
                     "c.idCategoria, c.nombre AS nombreCategoria, c.descripcion AS descCategoria " +
                     "FROM libros l " +
                     "LEFT JOIN categorias c ON l.idCategoria = c.idCategoria";
-
     private static final String SQL_GETBYID = SQL_GETALL + " WHERE l.idLibro = ?";
     private static final String SQL_EXISTBYID = "SELECT 1 FROM libros WHERE idLibro = ? LIMIT 1";
     private static final String SQL_SEARCH_BY_TITULO = SQL_GETALL + " WHERE l.titulo LIKE ?";
-
     private static final String SQL_SEARCH_BY_CATEGORIA = SQL_GETALL + " WHERE l.idCategoria = ?";
     private static final String SQL_SEARCH_BY_TITULO_Y_CATEGORIA = SQL_GETALL + " WHERE l.titulo LIKE ? AND l.idCategoria = ?";
-
     private static final String SQL_GET_ULTIMOS = SQL_GETALL + " ORDER BY l.idLibro DESC LIMIT ?";
-
     private static final String SQL_GET_AUTORES_BY_LIBRO =
             "SELECT a.idAutor, a.nombreCompleto, a.nacionalidad " +
                     "FROM autores a " +
@@ -46,16 +40,10 @@ public class LibroDAO implements DAO<Libro, Integer> {
 
     private static final String SQL_DELETE_AUTORES_LIBRO = "DELETE FROM libros_autores WHERE idLibro = ?";
 
-    // --- SOPORTE DE CONEXIÓN (Producción y Testing) ---
+
     private Connection conexionExterna;
-
-    public LibroDAO() {
-        // Constructor por defecto para producción
-    }
-
-    public LibroDAO(Connection conexionExterna) {
-        this.conexionExterna = conexionExterna;
-    }
+    public LibroDAO() {}
+    public LibroDAO(Connection conexionExterna) {this.conexionExterna = conexionExterna;}
 
     protected Connection obtenerConexion() throws SQLException {
         if (conexionExterna != null) {
@@ -74,7 +62,6 @@ public class LibroDAO implements DAO<Libro, Integer> {
         }
     }
 
-    // --- MÉTODO AUXILIAR DE MAPEO ---
     private Libro mapearLibro(ResultSet rs, Connection conn) throws SQLException {
         Libro l = new Libro();
         l.setIdLibro(rs.getInt("idLibro"));
@@ -115,9 +102,6 @@ public class LibroDAO implements DAO<Libro, Integer> {
         }
         return autores;
     }
-
-    // --- IMPLEMENTACIÓN DE LA INTERFAZ DAO ---
-
     @Override
     public List<Libro> getAll() {
         List<Libro> lista = new ArrayList<>();
@@ -183,7 +167,7 @@ public class LibroDAO implements DAO<Libro, Integer> {
         } finally {
             if (conn != null) {
                 try {
-                    conn.setAutoCommit(true); // Restauramos el autocommit original por buena práctica
+                    conn.setAutoCommit(true);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -309,9 +293,6 @@ public class LibroDAO implements DAO<Libro, Integer> {
             cerrarConexion(conn);
         }
     }
-
-    // --- MÉTODOS ESPECÍFICOS DE NEGOCIO ---
-
     public List<Libro> buscarPorTitulo(String keyword) {
         List<Libro> lista = new ArrayList<>();
         Connection conn = null;

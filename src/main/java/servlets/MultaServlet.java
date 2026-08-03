@@ -48,14 +48,12 @@ public class MultaServlet extends HttpServlet {
 
             switch (action) {
                 case "misMultas":
-                    // Filtra exclusivamente las multas pendientes del usuario logueado
                     listaMultas = multaDAO.getPendientesByUsuario(usuario.getIdUsuario());
                     request.setAttribute("tituloSeccion", "Mis Multas Pendientes");
                     break;
 
                 case "listar":
                 default:
-                    // Si es Admin o Bibliotecario, ve todas las multas del sistema. Si es usuario común, solo las suyas (historial completo).
                     if (usuario.getRol() == RolUsuario.ADMIN || usuario.getRol() == RolUsuario.BIBLIOTECARIO) {
                         listaMultas = multaDAO.getAll();
                         request.setAttribute("tituloSeccion", "Gestión General de Multas");

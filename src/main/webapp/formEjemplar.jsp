@@ -24,11 +24,9 @@
                 </div>
             </c:if>
 
-            <!-- El formulario enviará los datos al EjemplarServlet con la acción registrar -->
             <form action="${pageContext.request.contextPath}/ejemplares" method="POST">
                 <input type="hidden" name="action" value="registrar">
 
-                <!-- ID del libro que viene por parámetro desde el catálogo -->
                 <input type="hidden" name="idLibro" value="${param.idLibro}">
 
                 <div class="mb-3">

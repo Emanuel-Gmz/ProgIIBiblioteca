@@ -20,7 +20,6 @@
                 <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar Sesión
             </h2>
 
-            <!-- Mensaje de error si el Servlet lo devuelve -->
             <c:if test="${not empty error}">
                 <div class="alert alert-danger" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i> ${error}

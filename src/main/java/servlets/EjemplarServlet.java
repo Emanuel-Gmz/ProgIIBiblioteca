@@ -33,7 +33,6 @@ public class EjemplarServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Validar seguridad: Solo administradores o bibliotecarios pueden gestionar ejemplares
         HttpSession session = request.getSession(false);
         Usuario usuario = (session != null) ? (Usuario) session.getAttribute("usuarioLogueado") : null;
 
@@ -48,7 +47,6 @@ public class EjemplarServlet extends HttpServlet {
         }
 
         if ("nuevo".equals(action)) {
-            // Muestra el formulario para registrar un ejemplar asociado al idLibro recibido por parámetro
             String idLibroStr = request.getParameter("idLibro");
             if (idLibroStr != null && !idLibroStr.isEmpty()) {
                 request.setAttribute("idLibro", idLibroStr);
@@ -86,16 +84,13 @@ public class EjemplarServlet extends HttpServlet {
                     return;
                 }
 
-                // Crear el objeto Ejemplar
                 Ejemplar nuevoEjemplar = new Ejemplar();
                 nuevoEjemplar.setLibro(libro);
                 nuevoEjemplar.setCodigoInventario(codigoInventario);
-                nuevoEjemplar.setEstado(EstadoEjemplar.DISPONIBLE); // Por defecto nace disponible
+                nuevoEjemplar.setEstado(EstadoEjemplar.DISPONIBLE);
 
-                // Guardar en la base de datos usando el DAO
                 ejemplarDAO.insert(nuevoEjemplar);
 
-                // Redirigir de vuelta al catálogo con éxito
                 response.sendRedirect(request.getContextPath() + "/libros?action=listar");
             } else {
                 response.sendRedirect(request.getContextPath() + "/libros?action=listar");

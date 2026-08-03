@@ -36,7 +36,6 @@
                 </c:choose>
             </h2>
 
-            <%-- BARRA DE BÚSQUEDA EXCLUSIVA PARA ADMIN / BIBLIOTECARIO --%>
             <c:if test="${sessionScope.usuarioLogueado.rol == 'ADMIN' || sessionScope.usuarioLogueado.rol == 'BIBLIOTECARIO'}">
                 <form action="${pageContext.request.contextPath}/prestamos" method="GET" class="d-flex gap-2">
                     <input type="hidden" name="action" value="historial">
@@ -92,7 +91,6 @@
                                             </c:choose>
                                         </td>
 
-                                        <%-- BOTÓN PARA FINALIZAR / DEVOLVER PRÉSTAMO (Solo Admin / Bibliotecario) --%>
                                         <c:if test="${sessionScope.usuarioLogueado.rol == 'ADMIN' || sessionScope.usuarioLogueado.rol == 'BIBLIOTECARIO'}">
                                             <td class="text-center">
                                                 <c:if test="${p.estado == 'ACTIVO'}">

@@ -8,10 +8,8 @@
     <meta charset="UTF-8">
     <title>${not empty requestScope.tituloPagina ? requestScope.tituloPagina : 'Biblioteca Virtual WillBook'}</title>
 
-    <%-- 📌 Favicon global --%>
     <link rel="icon" href="${pageContext.request.contextPath}/imagenes/FaviconW.png" type="image/png">
 
-    <!-- Bootstrap 5 y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css?v=2"/>
@@ -36,14 +34,12 @@
 <nav class="navbar sticky-top shadow w-100 px-3" style="background-color: var(--azul-oscuro);" data-bs-theme="dark">
   <div class="container-fluid d-flex justify-content-between align-items-center w-100">
 
-    <%-- Logo y Título a la izquierda --%>
     <a href="${pageContext.request.contextPath}/index" class="navbar-brand fw-bold fs-4 text-white text-decoration-none d-flex align-items-center gap-2">
         <img src="${pageContext.request.contextPath}/imagenes/WillBook.png" alt="Logo WillBook" style="height: 35px; width: auto;" />
         WillBook
     </a>
 
     <div class="d-flex align-items-center gap-3">
-        <%-- Acciones de usuario a la derecha --%>
         <div class="d-none d-md-flex align-items-center gap-3">
             <c:choose>
                 <c:when test="${sessionScope.usuarioLogueado != null}">
@@ -89,7 +85,6 @@
             </c:choose>
         </div>
 
-        <%-- Botón hamburguesa estándar nativo para asegurar su despliegue y visibilidad --%>
         <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuBiblioteca" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -98,7 +93,6 @@
   </div>
 </nav>
 
-<%-- Menú Lateral Deslizante (Offcanvas) --%>
 <div class="offcanvas offcanvas-end" id="menuBiblioteca">
   <div class="offcanvas-header border-bottom">
     <h5 class="offcanvas-title fw-bold">MENÚ PRINCIPAL</h5>
@@ -111,7 +105,6 @@
       <a href="${pageContext.request.contextPath}/index" class="list-group-item list-group-item-action">Inicio</a>
       <a href="${pageContext.request.contextPath}/libros?action=listar" class="list-group-item list-group-item-action">Catálogo de Libros</a>
 
-      <%-- SECCIÓN GESTIÓN (ADMIN / BIBLIOTECARIO) --%>
       <c:if test="${sessionScope.usuarioLogueado != null && (sessionScope.usuarioLogueado.rol == 'ADMIN' || sessionScope.usuarioLogueado.rol == 'BIBLIOTECARIO')}">
         <div class="list-group-item text-secondary small fw-bold text-uppercase border-top bg-light">Gestión de Biblioteca</div>
         <a href="${pageContext.request.contextPath}/libros?action=nuevo" class="list-group-item list-group-item-action">Nuevo Libro</a>
@@ -128,7 +121,6 @@
         </a>
       </c:if>
 
-      <%-- SECCIÓN MI CUENTA --%>
       <c:if test="${sessionScope.usuarioLogueado != null}">
         <div class="list-group-item text-secondary small fw-bold text-uppercase border-top bg-light">Mi Cuenta</div>
         <c:if test="${sessionScope.usuarioLogueado.rol == 'USUARIO'}">
@@ -142,7 +134,6 @@
         </a>
       </c:if>
 
-      <%-- SECCIÓN ACCESO ANÓNIMO --%>
       <c:if test="${sessionScope.usuarioLogueado == null}">
         <div class="list-group-item bg-light text-secondary small fw-bold text-uppercase border-top">Acceso</div>
         <a href="${pageContext.request.contextPath}/usuario?action=login" class="list-group-item list-group-item-action text-primary fw-bold">

@@ -53,7 +53,6 @@ public class SesionServlet extends HttpServlet {
 
     String destinoRedirect = validarCredenciales(email, password, req);
 
-    // Si la validación falla, devuelve el JSP relativo; si es exitoso, devuelve la ruta completa con contextPath
     if (destinoRedirect.contains("formLogin.jsp")) {
       res.sendRedirect(req.getContextPath() + "/" + destinoRedirect);
     } else {
@@ -102,7 +101,6 @@ public class SesionServlet extends HttpServlet {
     sesion.setAttribute("usuarioLogueado", usuario);
     sesionesActivas.put(email, sesion);
 
-    // Retorna la ruta absoluta exacta para evitar problemas con el filtro
     return req.getContextPath() + "/index";
   }
 }

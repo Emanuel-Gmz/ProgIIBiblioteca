@@ -22,12 +22,10 @@ public class IndexServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            // Obtener el Top 3 de lectores destacados
             PrestamoDAO prestamoDAO = new PrestamoDAO();
             List<Usuario> topUsuarios = prestamoDAO.getTop3UsuariosConMasPrestamos();
             request.setAttribute("topUsuarios", topUsuarios);
 
-            // Obtener los últimos libros agregados para la sección de novedades
             LibroDAO libroDAO = new LibroDAO();
             List<Libro> ultimosLibros = libroDAO.obtenerUltimosAgregados(4);
             request.setAttribute("ultimosLibros", ultimosLibros);
@@ -36,7 +34,6 @@ public class IndexServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        // Redirige al archivo físico de la vista de inicio
         RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
         dispatcher.forward(request, response);
     }

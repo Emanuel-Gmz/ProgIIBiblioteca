@@ -15,17 +15,15 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class PrestamoDAO implements DAO<Prestamo, Integer> {
 
-    // --- CONSULTAS SQL ---
+
     private static final String SQL_INSERT =
             "INSERT INTO prestamos (idUsuario, idEjemplar, fechaPrestamo, fechaLimite, estado) VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE =
             "UPDATE prestamos SET fechaDevolucion = ?, estado = ? WHERE idPrestamo = ?";
     private static final String SQL_DELETE =
             "DELETE FROM prestamos WHERE idPrestamo = ?";
-
     private static final String SQL_UPDATE_ESTADO_EJEMPLAR =
             "UPDATE ejemplares SET estado = ? WHERE idEjemplar = ?";
-
     private static final String SQL_GETALL =
             "SELECT p.idPrestamo, p.fechaPrestamo, p.fechaLimite, p.fechaDevolucion, p.estado, " +
                     "u.idUsuario, u.nombre, u.apellido, " +
@@ -35,7 +33,6 @@ public class PrestamoDAO implements DAO<Prestamo, Integer> {
                     "INNER JOIN usuarios u ON p.idUsuario = u.idUsuario " +
                     "INNER JOIN ejemplares e ON p.idEjemplar = e.idEjemplar " +
                     "INNER JOIN libros l ON e.idLibro = l.idLibro";
-
     private static final String SQL_GETBYID = SQL_GETALL + " WHERE p.idPrestamo = ?";
     private static final String SQL_EXISTBYID = "SELECT 1 FROM prestamos WHERE idPrestamo = ? LIMIT 1";
     private static final String SQL_GET_BY_USUARIO = SQL_GETALL + " WHERE p.idUsuario = ?";
@@ -46,15 +43,9 @@ public class PrestamoDAO implements DAO<Prestamo, Integer> {
             "GROUP BY u.idUsuario, u.nombre, u.apellido " +
             "ORDER BY totalPrestamos DESC LIMIT 3";
 
-    // --- SOPORTE DE CONEXIÓN (Producción y Testing) ---
     private Connection conexionExterna;
-
     public PrestamoDAO() {}
-
-    public PrestamoDAO(Connection conexionExterna) {
-        this.conexionExterna = conexionExterna;
-    }
-
+    public PrestamoDAO(Connection conexionExterna) {this.conexionExterna = conexionExterna;}
     protected Connection obtenerConexion() throws SQLException {
         if (conexionExterna != null) {
             return conexionExterna;
@@ -71,9 +62,6 @@ public class PrestamoDAO implements DAO<Prestamo, Integer> {
             }
         }
     }
-
-    // --- IMPLEMENTACIÓN DE LA INTERFAZ DAO ---
-
     @Override
     public List<Prestamo> getAll() {
         List<Prestamo> lista = new ArrayList<>();
@@ -251,9 +239,6 @@ public class PrestamoDAO implements DAO<Prestamo, Integer> {
             cerrarConexion(conn);
         }
     }
-
-    // --- MÉTODOS ESPECÍFICOS DE NEGOCIO ---
-
     public List<Prestamo> getByUsuario(int idUsuario) {
         List<Prestamo> lista = new ArrayList<>();
         Connection conn = null;
@@ -321,7 +306,6 @@ public class PrestamoDAO implements DAO<Prestamo, Integer> {
         return lista;
     }
 
-    // --- METODO AUXILIAR DE MAPEO ---
     private Prestamo mapearPrestamo(ResultSet rs) throws SQLException {
         Prestamo p = new Prestamo();
         p.setIdPrestamo(rs.getInt("idPrestamo"));

@@ -14,7 +14,6 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class UsuarioDAO implements DAO<Usuario, Integer> {
 
-    // --- CONSULTAS SQL ---
     private static final String SQL_INSERT =
             "INSERT INTO usuarios (nombre, apellido, email, telefono, contrasenia, rol) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE =
@@ -23,22 +22,17 @@ public class UsuarioDAO implements DAO<Usuario, Integer> {
             "DELETE FROM usuarios WHERE idUsuario = ?";
     private static final String SQL_GETALL =
             "SELECT idUsuario, nombre, apellido, email, telefono, contrasenia, rol FROM usuarios";
-
     private static final String SQL_GETBYID = SQL_GETALL + " WHERE idUsuario = ?";
     private static final String SQL_EXISTBYID = "SELECT 1 FROM usuarios WHERE idUsuario = ? LIMIT 1";
-
     private static final String SQL_GETBYEMAIL = SQL_GETALL + " WHERE email = ?";
     private static final String SQL_EXISTBYEMAIL = "SELECT 1 FROM usuarios WHERE email = ? LIMIT 1";
 
-    // --- SOPORTE DE CONEXIÓN (Producción y Testing) ---
+
     private Connection conexionExterna;
-
     public UsuarioDAO() {}
-
     public UsuarioDAO(Connection conexionExterna) {
         this.conexionExterna = conexionExterna;
     }
-
     protected Connection obtenerConexion() throws SQLException {
         if (conexionExterna != null) {
             return conexionExterna;
@@ -56,7 +50,6 @@ public class UsuarioDAO implements DAO<Usuario, Integer> {
         }
     }
 
-    // --- MÉTODO AUXILIAR DE MAPEO ---
     private Usuario mapearUsuario(ResultSet rs) throws SQLException {
         Usuario u = new Usuario();
         u.setIdUsuario(rs.getInt("idUsuario"));
@@ -68,8 +61,6 @@ public class UsuarioDAO implements DAO<Usuario, Integer> {
         u.setRol(RolUsuario.valueOf(rs.getString("rol")));
         return u;
     }
-
-    // --- IMPLEMENTACIÓN DE LA INTERFAZ DAO ---
 
     @Override
     public List<Usuario> getAll() {
@@ -220,9 +211,6 @@ public class UsuarioDAO implements DAO<Usuario, Integer> {
             cerrarConexion(conn);
         }
     }
-
-    // --- MÉTODOS ESPECÍFICOS DE NEGOCIO ---
-
     public Usuario getByEmail(String email) {
         Usuario usuario = null;
         Connection conn = null;

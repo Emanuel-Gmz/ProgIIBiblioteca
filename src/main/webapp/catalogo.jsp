@@ -8,18 +8,15 @@
     <link rel="icon" href="${pageContext.request.contextPath}/imagenes/FaviconW.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
-    <%-- Forzamos la recarga del CSS sumándole ?v=3 para evitar problemas de caché --%>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css?v=3"/>
 </head>
 <body>
 
     <jsp:include page="header.jsp" />
 
-    <!-- Usamos nuestra clase personalizada seccion-catalogo -->
     <main class="container my-4 seccion-catalogo p-4">
         <h2 class="mb-4 fw-bold" style="color: var(--azul-oscuro);"><i class="bi bi-journal-richtext me-2 text-warning"></i> Catálogo de Libros</h2>
 
-        <!-- Barra de búsqueda, filtro automático y acciones -->
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
 
             <form id="formFiltro" action="${pageContext.request.contextPath}/libros" method="GET" class="d-flex gap-2 flex-wrap align-items-center">
@@ -60,13 +57,11 @@
             </div>
         </div>
 
-        <!-- Listado de libros con la clase personalizada tarjeta-libro -->
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <c:forEach var="libro" items="${listaLibros}">
                 <div class="col">
                     <div class="card h-100 tarjeta-libro overflow-hidden">
 
-                        <!-- Imagen de Portada con clase personalizada encabezado-portada -->
                         <div class="encabezado-portada text-center py-4" style="height: 220px; overflow: hidden;">
                             <c:choose>
                                 <c:when test="${not empty libro.imagen}">

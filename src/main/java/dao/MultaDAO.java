@@ -15,16 +15,12 @@ import java.util.List;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class MultaDAO implements DAO<Multa, Integer> {
-
-    // --- CONSULTAS SQL ---
     private static final String SQL_INSERT =
             "INSERT INTO multas (idPrestamo, idUsuario, monto, fechaGeneracion, estado) VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE =
             "UPDATE multas SET estado = ?, monto = ? WHERE idMulta = ?";
     private static final String SQL_DELETE =
             "DELETE FROM multas WHERE idMulta = ?";
-
-    // INNER JOIN para traer los datos del infractor y del préstamo asociado
     private static final String SQL_GETALL =
             "SELECT m.idMulta, m.monto, m.fechaGeneracion, m.estado, " +
                     "u.idUsuario, u.nombre, u.apellido, u.email, " +
@@ -32,25 +28,14 @@ public class MultaDAO implements DAO<Multa, Integer> {
                     "FROM multas m " +
                     "INNER JOIN usuarios u ON m.idUsuario = u.idUsuario " +
                     "INNER JOIN prestamos p ON m.idPrestamo = p.idPrestamo";
-
     private static final String SQL_GETBYID = SQL_GETALL + " WHERE m.idMulta = ?";
     private static final String SQL_EXISTBYID = "SELECT 1 FROM multas WHERE idMulta = ? LIMIT 1";
-
-    // Consultas específicas de negocio
     private static final String SQL_GET_BY_USUARIO = SQL_GETALL + " WHERE m.idUsuario = ?";
     private static final String SQL_GET_PENDIENTES_BY_USUARIO = SQL_GETALL + " WHERE m.idUsuario = ? AND m.estado = 'PENDIENTE'";
 
-    // --- SOPORTE DE CONEXIÓN (Producción y Testing) ---
     private Connection conexionExterna;
-
-    public MultaDAO() {
-        // Constructor por defecto para producción
-    }
-
-    public MultaDAO(Connection conexionExterna) {
-        this.conexionExterna = conexionExterna;
-    }
-
+    public MultaDAO() {}
+    public MultaDAO(Connection conexionExterna) {this.conexionExterna = conexionExterna;}
     protected Connection obtenerConexion() throws SQLException {
         if (conexionExterna != null) {
             return conexionExterna;
@@ -68,7 +53,6 @@ public class MultaDAO implements DAO<Multa, Integer> {
         }
     }
 
-    // --- MÉTODO AUXILIAR DE MAPEO ---
     private Multa mapearMulta(ResultSet rs) throws SQLException {
         Multa m = new Multa();
         m.setIdMulta(rs.getInt("idMulta"));
@@ -76,7 +60,6 @@ public class MultaDAO implements DAO<Multa, Integer> {
         m.setFechaGeneracion(rs.getDate("fechaGeneracion").toLocalDate());
         m.setEstado(EstadoMulta.valueOf(rs.getString("estado")));
 
-        // Mapeo del Usuario
         Usuario u = new Usuario();
         u.setIdUsuario(rs.getInt("idUsuario"));
         u.setNombre(rs.getString("nombre"));
@@ -84,7 +67,6 @@ public class MultaDAO implements DAO<Multa, Integer> {
         u.setEmail(rs.getString("email"));
         m.setUsuario(u);
 
-        // Mapeo del Préstamo origen
         Prestamo p = new Prestamo();
         p.setIdPrestamo(rs.getInt("idPrestamo"));
         if (rs.getDate("fechaLimite") != null) {
@@ -94,8 +76,6 @@ public class MultaDAO implements DAO<Multa, Integer> {
 
         return m;
     }
-
-    // --- IMPLEMENTACIÓN DE LA INTERFAZ DAO ---
 
     @Override
     public List<Multa> getAll() {
@@ -235,9 +215,6 @@ public class MultaDAO implements DAO<Multa, Integer> {
             cerrarConexion(conn);
         }
     }
-
-    // --- MÉTODOS ESPECÍFICOS DE NEGOCIO ---
-
     public List<Multa> getByUsuario(int idUsuario) {
         List<Multa> lista = new ArrayList<>();
         Connection conn = null;

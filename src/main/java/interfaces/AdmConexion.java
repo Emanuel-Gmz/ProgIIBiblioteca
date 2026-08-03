@@ -30,7 +30,7 @@ public enum AdmConexion {
             String envPass = System.getenv("DB_PASS");
 
             HikariConfig config = new HikariConfig();
-            config.setPoolName("BibliotecaPool"); // Adaptado a tu nuevo proyecto
+            config.setPoolName("BibliotecaPool");
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
             config.setConnectionTestQuery("SELECT 1");
 

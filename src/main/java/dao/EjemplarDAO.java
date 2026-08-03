@@ -14,16 +14,12 @@ import java.util.List;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class EjemplarDAO implements DAO<Ejemplar, Integer> {
-
-    // --- CONSULTAS SQL ---
     private static final String SQL_INSERT =
             "INSERT INTO ejemplares (idLibro, codigoInventario, estado) VALUES (?, ?, ?)";
     private static final String SQL_UPDATE =
             "UPDATE ejemplares SET idLibro = ?, codigoInventario = ?, estado = ? WHERE idEjemplar = ?";
     private static final String SQL_DELETE =
             "DELETE FROM ejemplares WHERE idEjemplar = ?";
-
-    // INNER JOIN para traer los datos básicos del libro al que pertenece la copia
     private static final String SQL_GETALL =
             "SELECT e.idEjemplar, e.codigoInventario, e.estado, " +
                     "l.idLibro, l.ISBN, l.titulo " +
@@ -32,21 +28,13 @@ public class EjemplarDAO implements DAO<Ejemplar, Integer> {
 
     private static final String SQL_GETBYID = SQL_GETALL + " WHERE e.idEjemplar = ?";
     private static final String SQL_EXISTBYID = "SELECT 1 FROM ejemplares WHERE idEjemplar = ? LIMIT 1";
-
-    // Consulta de negocio: Traer solo las copias disponibles de un libro específico
     private static final String SQL_GET_DISPONIBLES_BY_LIBRO =
             SQL_GETALL + " WHERE e.idLibro = ? AND e.estado = 'DISPONIBLE'";
 
-    // --- SOPORTE DE CONEXIÓN (Producción y Testing) ---
     private Connection conexionExterna;
+    public EjemplarDAO() {}
 
-    public EjemplarDAO() {
-        // Constructor por defecto para producción
-    }
-
-    public EjemplarDAO(Connection conexionExterna) {
-        this.conexionExterna = conexionExterna;
-    }
+    public EjemplarDAO(Connection conexionExterna) {this.conexionExterna = conexionExterna;}
 
     protected Connection obtenerConexion() throws SQLException {
         if (conexionExterna != null) {
@@ -54,28 +42,21 @@ public class EjemplarDAO implements DAO<Ejemplar, Integer> {
         }
         return AdmConexion.INSTANCE.obtenerConexion();
     }
-
-    /**
-     * Cierra la conexión únicamente si NO es una conexión externa de pruebas.
-     */
     private void cerrarConexion(Connection conn) {
         if (conexionExterna == null && conn != null) {
             try {
                 conn.close();
             } catch (SQLException e) {
-                // Silenciar o manejar error de cierre
             }
         }
     }
 
-    // --- MÉTODO AUXILIAR DE MAPEO ---
     private Ejemplar mapearEjemplar(ResultSet rs) throws SQLException {
         Ejemplar e = new Ejemplar();
         e.setIdEjemplar(rs.getInt("idEjemplar"));
         e.setCodigoInventario(rs.getString("codigoInventario"));
         e.setEstado(EstadoEjemplar.valueOf(rs.getString("estado")));
 
-        // Mapeamos el Libro asociado (solo los datos que trajimos en el JOIN)
         Libro l = new Libro();
         l.setIdLibro(rs.getInt("idLibro"));
         l.setIsbn(rs.getString("ISBN"));
@@ -85,9 +66,6 @@ public class EjemplarDAO implements DAO<Ejemplar, Integer> {
 
         return e;
     }
-
-    // --- IMPLEMENTACIÓN DE LA INTERFAZ DAO ---
-
     @Override
     public List<Ejemplar> getAll() {
         List<Ejemplar> lista = new ArrayList<>();
@@ -225,9 +203,6 @@ public class EjemplarDAO implements DAO<Ejemplar, Integer> {
             cerrarConexion(conn);
         }
     }
-
-    // --- MÉTODOS ESPECÍFICOS DE NEGOCIO ---
-
     public List<Ejemplar> getDisponiblesByLibro(int idLibro) {
         List<Ejemplar> lista = new ArrayList<>();
         Connection conn = null;

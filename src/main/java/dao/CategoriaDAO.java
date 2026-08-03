@@ -12,8 +12,6 @@ import java.util.List;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class CategoriaDAO implements DAO<Categoria, Integer> {
-
-    // --- CONSULTAS SQL ---
     private static final String SQL_INSERT =
             "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)";
     private static final String SQL_UPDATE =
@@ -22,24 +20,14 @@ public class CategoriaDAO implements DAO<Categoria, Integer> {
             "DELETE FROM categorias WHERE idCategoria = ?";
     public static final String SQL_GETALL =
             "SELECT idCategoria, nombre, descripcion FROM categorias";
-
     private static final String SQL_GETBYID = SQL_GETALL + " WHERE idCategoria = ?";
     private static final String SQL_EXISTBYID = "SELECT 1 FROM categorias WHERE idCategoria = ? LIMIT 1";
-
-    // Consulta específica de negocio
     private static final String SQL_GETBYNOMBRE = SQL_GETALL + " WHERE nombre = ?";
-
-    // --- SOPORTE DE CONEXIÓN (Producción y Testing) ---
     private Connection conexionExterna;
 
-    public CategoriaDAO() {
-        // Constructor por defecto para producción
-    }
+    public CategoriaDAO() {}
 
-    public CategoriaDAO(Connection conexionExterna) {
-        this.conexionExterna = conexionExterna;
-    }
-
+    public CategoriaDAO(Connection conexionExterna) {this.conexionExterna = conexionExterna;}
     protected Connection obtenerConexion() throws SQLException {
         if (conexionExterna != null) {
             return conexionExterna;
@@ -47,20 +35,14 @@ public class CategoriaDAO implements DAO<Categoria, Integer> {
         return AdmConexion.INSTANCE.obtenerConexion();
     }
 
-    /**
-     * Cierra la conexión únicamente si NO es la conexión externa de pruebas.
-     */
     private void cerrarConexion(Connection conn) {
         if (conexionExterna == null && conn != null) {
             try {
                 conn.close();
             } catch (SQLException e) {
-                // Silenciar o manejar error de cierre
             }
         }
     }
-
-    // --- MÉTODO AUXILIAR DE MAPEO ---
     private Categoria mapearCategoria(ResultSet rs) throws SQLException {
         Categoria c = new Categoria();
         c.setIdCategoria(rs.getInt("idCategoria"));
@@ -68,9 +50,6 @@ public class CategoriaDAO implements DAO<Categoria, Integer> {
         c.setDescripcion(rs.getString("descripcion"));
         return c;
     }
-
-    // --- IMPLEMENTACIÓN DE LA INTERFAZ DAO ---
-
     @Override
     public List<Categoria> getAll() {
         List<Categoria> lista = new ArrayList<>();
@@ -212,9 +191,6 @@ public class CategoriaDAO implements DAO<Categoria, Integer> {
             cerrarConexion(conn);
         }
     }
-
-    // --- MÉTODOS ESPECÍFICOS DE NEGOCIO ---
-
     public Categoria getByNombre(String nombre) {
         Categoria categoria = null;
         Connection conn = null;

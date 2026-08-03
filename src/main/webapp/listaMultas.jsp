@@ -13,7 +13,6 @@
 </head>
 <body>
 
-    <!-- Incluimos el Header -->
     <jsp:include page="header.jsp" />
 
     <main class="container my-5">
@@ -27,14 +26,12 @@
             </a>
         </div>
 
-        <!-- Mensaje de error si el Servlet lo devuelve -->
         <c:if test="${not empty error}">
             <div class="alert alert-danger" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i> ${error}
             </div>
         </c:if>
 
-        <!-- Tabla de Multas -->
         <div class="card shadow-lg">
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -61,7 +58,6 @@
                                         <tr>
                                             <td class="fw-bold">${multa.idMulta}</td>
 
-                                            <!-- Columna de Usuario (Visible solo para Admins/Bibliotecarios) -->
                                             <c:if test="${sessionScope.usuarioLogueado.rol == 'ADMIN' || sessionScope.usuarioLogueado.rol == 'BIBLIOTECARIO'}">
                                                 <td>
                                                     ${multa.usuario.nombre} ${multa.usuario.apellido}
@@ -73,7 +69,6 @@
                                             <td>${multa.fechaGeneracion}</td>
                                             <td class="fw-bold text-danger">$ ${multa.monto}</td>
 
-                                            <!-- Badge de Estado -->
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${multa.estado == 'PENDIENTE'}">
@@ -88,7 +83,6 @@
                                                 </c:choose>
                                             </td>
 
-                                            <!-- Acciones de cambio de estado (Visible solo para Admins/Bibliotecarios) -->
                                             <c:if test="${sessionScope.usuarioLogueado.rol == 'ADMIN' || sessionScope.usuarioLogueado.rol == 'BIBLIOTECARIO'}">
                                                 <td class="text-center">
                                                     <form action="${pageContext.request.contextPath}/multas" method="POST" class="d-inline-flex gap-1 justify-content-center">
@@ -128,7 +122,7 @@
         </div>
     </main>
 
-    <!-- Incluimos el Footer -->
+
     <jsp:include page="footer.jsp" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -13,7 +13,6 @@
 </head>
 <body>
 
-    <!-- Incluimos el Header -->
     <jsp:include page="header.jsp" />
 
     <div class="container mt-5 mb-5">
@@ -25,14 +24,12 @@
                     </div>
 
                     <div class="card-body">
-                        <!-- Mensaje de error si el Servlet lo devuelve -->
                         <c:if test="${not empty error}">
                             <div class="alert alert-danger" role="alert">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i> ${error}
                             </div>
                         </c:if>
 
-                        <!-- Apuntamos correctamente al Servlet /libros con la acción insertar -->
                         <form action="${pageContext.request.contextPath}/libros" method="POST">
                             <input type="hidden" name="action" value="insertar">
 
@@ -51,7 +48,6 @@
                                 <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="Ingrese la Descripción" required></textarea>
                             </div>
 
-                            <!-- Selector de Categoría -->
                             <div class="mb-3">
                                 <label for="idCategoria" class="form-label fw-bold">Categoría</label>
                                 <select name="idCategoria" id="idCategoria" class="form-select" required>
@@ -69,7 +65,6 @@
                                 <small class="text-muted">Pega el enlace web de la imagen del libro.</small>
                             </div>
 
-                            <!-- Selector de Autor (Nuevo campo integrado) -->
                             <div class="mb-3">
                                 <label for="idAutor" class="form-label fw-bold">Autor</label>
                                 <select name="idAutor" id="idAutor" class="form-select" required>
@@ -97,7 +92,6 @@
         </div>
     </div>
 
-    <!-- Incluimos el Footer -->
     <jsp:include page="footer.jsp" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

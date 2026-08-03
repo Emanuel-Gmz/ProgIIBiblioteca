@@ -12,8 +12,6 @@ import java.util.List;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class AutorDAO implements DAO<Autor, Integer> {
-
-    // --- CONSULTAS SQL ---
     private static final String SQL_INSERT =
             "INSERT INTO autores (nombreCompleto, nacionalidad) VALUES (?, ?)";
     private static final String SQL_UPDATE =
@@ -22,23 +20,13 @@ public class AutorDAO implements DAO<Autor, Integer> {
             "DELETE FROM autores WHERE idAutor = ?";
     public static final String SQL_GETALL =
             "SELECT idAutor, nombreCompleto, nacionalidad FROM autores";
-
     private static final String SQL_GETBYID = SQL_GETALL + " WHERE idAutor = ?";
     private static final String SQL_EXISTBYID = "SELECT 1 FROM autores WHERE idAutor = ? LIMIT 1";
-
-    // Consulta específica de negocio
     private static final String SQL_SEARCH_BY_NOMBRE = SQL_GETALL + " WHERE nombreCompleto LIKE ?";
 
-    // --- SOPORTE DE CONEXIÓN (Producción y Testing) ---
     private Connection conexionExterna;
-
-    public AutorDAO() {
-        // Constructor por defecto para producción
-    }
-
-    public AutorDAO(Connection conexionExterna) {
-        this.conexionExterna = conexionExterna;
-    }
+    public AutorDAO() {}
+    public AutorDAO(Connection conexionExterna) {this.conexionExterna = conexionExterna;}
 
     protected Connection obtenerConexion() throws SQLException {
         if (conexionExterna != null) {
@@ -47,20 +35,6 @@ public class AutorDAO implements DAO<Autor, Integer> {
         return AdmConexion.INSTANCE.obtenerConexion();
     }
 
-    /**
-     * Método auxiliar para cerrar la conexión solo si NO es una conexión externa de prueba.
-     */
-    private void cerrarConexion(Connection conn) {
-        if (conexionExterna == null && conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                // Log opcional de error al cerrar
-            }
-        }
-    }
-
-    // --- MÉTODO AUXILIAR DE MAPEO ---
     private Autor mapearAutor(ResultSet rs) throws SQLException {
         Autor a = new Autor();
         a.setIdAutor(rs.getInt("idAutor"));
@@ -68,8 +42,6 @@ public class AutorDAO implements DAO<Autor, Integer> {
         a.setNacionalidad(rs.getString("nacionalidad"));
         return a;
     }
-
-    // --- IMPLEMENTACIÓN DE LA INTERFAZ DAO ---
 
     @Override
     public List<Autor> getAll() {
@@ -206,9 +178,6 @@ public class AutorDAO implements DAO<Autor, Integer> {
             cerrarConexion(conn);
         }
     }
-
-    // --- MÉTODOS ESPECÍFICOS DE NEGOCIO ---
-
     public List<Autor> searchByNombre(String keyword) {
         List<Autor> lista = new ArrayList<>();
         Connection conn = null;
@@ -230,5 +199,14 @@ public class AutorDAO implements DAO<Autor, Integer> {
             cerrarConexion(conn);
         }
         return lista;
+    }
+    private void cerrarConexion(Connection conn) {
+        if (conexionExterna == null && conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                // Log opcional de error al cerrar
+            }
+        }
     }
 }
