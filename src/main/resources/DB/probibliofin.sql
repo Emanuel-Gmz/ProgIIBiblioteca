@@ -99,4 +99,7 @@ CREATE TABLE `multas` (
   CONSTRAINT `fk_multa_usuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuario`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `probiblioteca`.`usuarios` (`idUsuario`, `nombre`, `apellido`, `email`, `telefono`, `contrasenia`, `rol`) VALUES ('3', 'Admin', 'admin', 'admin.@admin.com', '+334242', '$2a$12$5xyTKzT8uHTQGyQCPgGaA.08G5fvEyeJVz.eKQOc1U4YZHWHwnyxm', 'ADMIN');
+INSERT INTO `probiblioteca`.`usuarios` (`idUsuario`, `nombre`, `apellido`, `email`, `telefono`, `contrasenia`, `rol`) VALUES ('4', 'Usuario', 'usuario', 'usuario@usu.com', '+44535', '$2a$12$5xyTKzT8uHTQGyQCPgGaA.08G5fvEyeJVz.eKQOc1U4YZHWHwnyxm', 'USUARIO');
+
 SET FOREIGN_KEY_CHECKS = 1;
