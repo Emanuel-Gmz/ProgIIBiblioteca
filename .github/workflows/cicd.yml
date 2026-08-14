@@ -71,19 +71,17 @@ jobs:
           echo "Levantando servicios en segundo plano..."
           docker compose up -d
           
-          echo "Esperando a que la aplicación Java y la BD inicien (15s)..."
-          sleep 15
+          echo "Esperando a que la base de datos y Tomcat inicien por completo (30s)..."
+          sleep 30
           
           echo "--- Estado de los contenedores activos ---"
           docker ps
           
           echo "--- Ejecutando Prueba de Humo (HTTP Smoke Test) ---"
-          # Intenta pegarle al puerto expuesto en tu docker-compose.yaml (8080)
-          # Si devuelve un código de error (500, 404, etc.) o no responde, el pipeline fallará de inmediato.
           curl -f http://localhost:8081/ProBiblio/ || { 
-            echo "❌ ERROR: La aplicación no responde o lanzó un fallo en el puerto 8080."; 
+            echo "❌ ERROR: La aplicación no responde o lanzó un fallo en el puerto 8081."; 
             echo "--- LOGS DEL CONTENEDOR DE APLICACIÓN ---";
-            docker compose logs --tail=100 $CONTAINER_NAME;
+            docker compose logs --tail=100 biblioteca_app;
             exit 1; 
           }
           
