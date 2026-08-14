@@ -1,0 +1,93 @@
+name: Java CI/CD Pipeline con Docker (Secrets)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+env:
+  IMAGE_NAME: biblio-app
+  CONTAINER_NAME: biblioteca_app
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      # 1. Base de datos aislada para pruebas de integración de Maven
+      mysql-test:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASS }}
+          MYSQL_DATABASE: biblioteca_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      # 2. Descargar el código fuente
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      # 3. Configurar entorno de ejecución Java
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # 4. Validar compilación inicial y generar el archivo .war obligatoriamente antes de Docker
+      - name: Compilar y empaquetar con Maven (Sanity Check)
+        run: mvn clean package -DskipTests
+
+      # 5. Ejecutar batería de pruebas conectándose al MySQL del Runner
+      - name: Ejecutar Pruebas Automatizadas (Tests)
+        run: mvn test
+        env:
+          DB_URL: jdbc:mysql://localhost:3306/biblioteca_db?useSSL=false&serverTimezone=UTC
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+
+      # 6. Configurar entorno de compilación nativo de Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 7. Orquestación y verificación en vivo usando Docker Compose
+      - name: Verificar Integración Completa con Docker Compose
+        run: |
+          # Exportamos las credenciales al entorno de la terminal para Compose
+          export DB_USER="${{ secrets.DB_USER }}"
+          export DB_PASS="${{ secrets.DB_PASS }}"
+          
+          echo "Construyendo imágenes desde el ecosistema Compose..."
+          docker compose build --no-cache
+          
+          echo "Levantando servicios en segundo plano..."
+          docker compose up -d
+          
+          echo "Esperando a que la aplicación Java y la BD inicien (15s)..."
+          sleep 15
+          
+          echo "--- Estado de los contenedores activos ---"
+          docker ps
+          
+          echo "--- Ejecutando Prueba de Humo (HTTP Smoke Test) ---"
+          # Intenta pegarle al puerto expuesto en tu docker-compose.yaml (8080)
+          # Si devuelve un código de error (500, 404, etc.) o no responde, el pipeline fallará de inmediato.
+          curl -f http://localhost:8080/ProBiblio/ || { 
+            echo "❌ ERROR: La aplicación no responde o lanzó un fallo en el puerto 8080."; 
+            echo "--- LOGS DEL CONTENEDOR DE APLICACIÓN ---";
+            docker compose logs --tail=100 $CONTAINER_NAME;
+            exit 1; 
+          }
+          
+          echo "✅ ¡Prueba de humo superada con éxito!"
+          
+          echo "Desmantelando infraestructura de prueba..."
+          docker compose down -v
