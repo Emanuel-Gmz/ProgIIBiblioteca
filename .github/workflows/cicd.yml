@@ -58,13 +58,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 7. Orquestación y verificación en vivo usando Docker Compose
       - name: Verificar Integración Completa con Docker Compose
         run: |
-          # Exportamos las credenciales al entorno de la terminal para Compose
-          export MYSQL_DATABASE=probiblioteca
+          # Exportamos las credenciales para que Docker Compose las reconozca
           export DB_USER="${{ secrets.DB_USER }}"
           export DB_PASS="${{ secrets.DB_PASS }}"
+          export MYSQL_DATABASE=probiblioteca
           
           echo "Construyendo imágenes desde el ecosistema Compose..."
           docker compose build --no-cache
@@ -79,8 +78,6 @@ jobs:
           docker ps
           
           echo "--- Ejecutando Prueba de Humo (HTTP Smoke Test) ---"
-          # Intenta pegarle al puerto expuesto en tu docker-compose.yaml (8080)
-          # Si devuelve un código de error (500, 404, etc.) o no responde, el pipeline fallará de inmediato.
           curl -f http://localhost:8081/ProBiblio/ || { 
             echo "❌ ERROR: La aplicación lanzó un fallo. Mostrando logs del servicio app:"; 
             docker compose logs --tail=100 app;
