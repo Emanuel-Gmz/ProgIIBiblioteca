@@ -13,30 +13,30 @@ jobs:
     steps:
       # 1. Descargar el código del repositorio
       - name: Checkout del código
-        uses: actions/checkout@v4   # 👉 Steps: Descarga el código del repositorio
+        uses: actions/checkout@v4  #👉 Steps: Descarga el código del repositorio
 
       # 2. Configurar el entorno de Java 17 para chequear la compilación previa de Maven
       - name: Set up JDK 17
-        uses: actions/setup-java@v4  # 👉 Steps uses
+        uses: actions/setup-java@v4 # 👉 Steps uses
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
 
       # 3. Compilar el proyecto localmente para asegurar que no haya errores de sintaxis
-      - name: Compilar con Maven
-        run: mvn clean compile   # 👉 Steps run
+      - name: Compilar y empaquetar con Maven
+        run: mvn clean package -DskipTests # 👉 Steps  run
 
       # 4. Configurar Docker Buildx (herramienta avanzada de Docker para compilar eficientemente)
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3  # 👉 Steps uses
+        uses: docker/setup-buildx-action@v3 # 👉 Steps uses
 
       # 5. Probar la construcción completa usando Docker Compose
       # Esto asegura que tanto el Dockerfile como el archivo Compose no tengan errores de formato
       - name: Verificar Construcción con Docker Compose
-        run: |                                                        # 👉 Steps run
+        run: |
           docker compose build
 
-      # 6. Mensaje de éxito
+      # 6. (Opcional) Mensaje de éxito
       - name: Estado del Pipeline
-        run: echo "La compilación y la verificación de Docker se completaron con éxito....."
+        run: echo "¡La compilación y la construcción con Docker se completaron con éxito!"
