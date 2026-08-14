@@ -42,10 +42,9 @@ public enum AdmConexion {
                 config.setUsername(envUser != null ? envUser : "root");
                 config.setPassword(envPass != null ? envPass : "");
             } else if (envHost != null && !envHost.isEmpty()) {
-                // Soporte nativo para Docker Compose usando DB_HOST (ej: "db")
                 log.info("[DB-LOG] Modo: DOCKER COMPOSE (DB_HOST)");
                 String dbName = (envName != null && !envName.isEmpty()) ? envName : "probiblioteca";
-                String jdbcUrl = "jdbc:mysql://" + envHost + ":3306/" + dbName + "?useSSL=false&serverTimezone=UTC";
+                String jdbcUrl = "jdbc:mysql://" + envHost + ":3306/" + dbName + "?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
                 config.setJdbcUrl(jdbcUrl);
                 config.setUsername(envUser != null ? envUser : "root");
                 config.setPassword(envPass != null ? envPass : "");
