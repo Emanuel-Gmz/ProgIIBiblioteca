@@ -46,7 +46,7 @@ jobs:
       - name: Compilar y empaquetar con Maven (Sanity Check)
         run: mvn clean package -DskipTests
 
-      # 5. Ejecutar batería de pruebas conectándose al MySQL del Runner
+      # 5. Ejecutar batería de pruebas conectándose al MySQL del Runner.
       - name: Ejecutar Pruebas Automatizadas (Tests)
         run: mvn test
         env:

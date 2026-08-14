@@ -26,24 +26,29 @@ public enum AdmConexion {
             log.info("[DB-LOG] Iniciando configuración del pool HikariCP para Biblioteca...");
 
             String envUrl  = System.getenv("DB_URL");
+            String envHost = System.getenv("DB_HOST");
             String envUser = System.getenv("DB_USER");
             String envPass = System.getenv("DB_PASS");
+            String envName = System.getenv("MYSQL_DATABASE");
 
             HikariConfig config = new HikariConfig();
             config.setPoolName("BibliotecaPool");
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
             config.setConnectionTestQuery("SELECT 1");
 
-            if (envUrl != null && envUser != null && envPass != null) {
-                log.info("[DB-LOG] Modo: PRODUCCIÓN (variables de entorno)");
+            if (envUrl != null && !envUrl.isEmpty()) {
+                log.info("[DB-LOG] Modo: PRODUCCIÓN (DB_URL)");
                 config.setJdbcUrl(envUrl);
-                config.setUsername(envUser);
-                config.setPassword(envPass);
-                config.setMaximumPoolSize(15);
-                config.setMinimumIdle(2);
-                config.setConnectionTimeout(10_000);
-                config.setIdleTimeout(300_000);
-                config.setMaxLifetime(600_000);
+                config.setUsername(envUser != null ? envUser : "root");
+                config.setPassword(envPass != null ? envPass : "");
+            } else if (envHost != null && !envHost.isEmpty()) {
+                // Soporte nativo para Docker Compose usando DB_HOST (ej: "db")
+                log.info("[DB-LOG] Modo: DOCKER COMPOSE (DB_HOST)");
+                String dbName = (envName != null && !envName.isEmpty()) ? envName : "probiblioteca";
+                String jdbcUrl = "jdbc:mysql://" + envHost + ":3306/" + dbName + "?useSSL=false&serverTimezone=UTC";
+                config.setJdbcUrl(jdbcUrl);
+                config.setUsername(envUser != null ? envUser : "root");
+                config.setPassword(envPass != null ? envPass : "");
             } else {
                 log.warning("[DB-LOG] Modo: DESARROLLO (database.properties)");
                 Properties props = new Properties();
@@ -56,13 +61,16 @@ public enum AdmConexion {
                 config.setJdbcUrl(props.getProperty("db.url"));
                 config.setUsername(props.getProperty("db.user", "root"));
                 config.setPassword(props.getProperty("db.pass"));
-                config.setMaximumPoolSize(Integer.parseInt(props.getProperty("hikari.maximumPoolSize", "15")));
-                config.setMinimumIdle(Integer.parseInt(props.getProperty("hikari.minimumIdle", "2")));
-                config.setConnectionTimeout(Long.parseLong(props.getProperty("hikari.connectionTimeout", "10000")));
-                config.setIdleTimeout(Long.parseLong(props.getProperty("hikari.idleTimeout", "300000")));
-                config.setMaxLifetime(Long.parseLong(props.getProperty("hikari.maxLifetime", "600000")));
-                log.info("[DB-LOG] URL: " + config.getJdbcUrl());
             }
+
+            // Configuraciones comunes de HikariCP
+            config.setMaximumPoolSize(15);
+            config.setMinimumIdle(2);
+            config.setConnectionTimeout(10_000);
+            config.setIdleTimeout(300_000);
+            config.setMaxLifetime(600_000);
+
+            log.info("[DB-LOG] URL de conexión establecida: " + config.getJdbcUrl());
 
             HikariDataSource ds = new HikariDataSource(config);
             log.info("[DB-LOG] Pool listo. Tamaño máximo: " + config.getMaximumPoolSize());
