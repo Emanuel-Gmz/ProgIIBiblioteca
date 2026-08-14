@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      # 1. Base de datos aislada para pruebas de integración de Maven
+      # 1. Base de datos aislada para pruebas de integración de Maven.
       mysql-test:
         image: mysql:8.0
         env:
